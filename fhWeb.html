@@ -14,607 +14,366 @@
     <!-- Google Maps API -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=visualization"></script> 
     <script type="text/javascript">
-    var map;
-    var context;
-    var particles;
-    var pointArray=[];
+      var map;
+      var context;
+      var particles;
+      var pointArray=[];
 
-    function initialize() {
-      var latlng = new google.maps.LatLng(25.208605, -103.057424); 
-      var myOptions = { 
-        zoom: 6, 
-        center: latlng, 
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        styles: [
-          {
-              "elementType": "labels.text",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "landscape.natural",
-              "elementType": "geometry.fill",
-              "stylers": [
-                  {
-                      "color": "#f5f5f2"
-                  },
-                  {
-                      "visibility": "on"
-                  }
-              ]
-          },
-          {
-              "featureType": "administrative",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "transit",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.attraction",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "landscape.man_made",
-              "elementType": "geometry.fill",
-              "stylers": [
-                  {
-                      "color": "#ffffff"
-                  },
-                  {
-                      "visibility": "on"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.business",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.medical",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.place_of_worship",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.school",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.sports_complex",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.highway",
-              "elementType": "geometry",
-              "stylers": [
-                  {
-                      "color": "#ffffff"
-                  },
-                  {
-                      "visibility": "simplified"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.arterial",
-              "stylers": [
-                  {
-                      "visibility": "simplified"
-                  },
-                  {
-                      "color": "#ffffff"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.highway",
-              "elementType": "labels.icon",
-              "stylers": [
-                  {
-                      "color": "#ffffff"
-                  },
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.highway",
-              "elementType": "labels.icon",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.arterial",
-              "stylers": [
-                  {
-                      "color": "#ffffff"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.local",
-              "stylers": [
-                  {
-                      "color": "#ffffff"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.park",
-              "elementType": "labels.icon",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi",
-              "elementType": "labels.icon",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "water",
-              "stylers": [
-                  {
-                      "color": "#71c8d4"
-                  }
-              ]
-          },
-          {
-              "featureType": "landscape",
-              "stylers": [
-                  {
-                      "color": "#e5e8e7"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.park",
-              "stylers": [
-                  {
-                      "color": "#8ba129"
-                  }
-              ]
-          },
-          {
-              "featureType": "road",
-              "stylers": [
-                  {
-                      "color": "#ffffff"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.sports_complex",
-              "elementType": "geometry",
-              "stylers": [
-                  {
-                      "color": "#c7c7c7"
-                  },
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "water",
-              "stylers": [
-                  {
-                      "color": "#a0d3d3"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.park",
-              "stylers": [
-                  {
-                      "color": "#91b65d"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.park",
-              "stylers": [
-                  {
-                      "gamma": 1.51
-                  }
-              ]
-          },
-          {
-              "featureType": "road.local",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.local",
-              "elementType": "geometry",
-              "stylers": [
-                  {
-                      "visibility": "on"
-                  }
-              ]
-          },
-          {
-              "featureType": "poi.government",
-              "elementType": "geometry",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "landscape",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "road",
-              "elementType": "labels",
-              "stylers": [
-                  {
-                      "visibility": "off"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.arterial",
-              "elementType": "geometry",
-              "stylers": [
-                  {
-                      "visibility": "simplified"
-                  }
-              ]
-          },
-          {
-              "featureType": "road.local",
-              "stylers": [
-                  {
-                      "visibility": "simplified"
-                  }
-              ]
-          },
-          {
-              "featureType": "road"
-          },
-          {
-              "featureType": "road"
-          },
-          {},
-          {
-              "featureType": "road.highway"
-          }
-      ]
-      };
-      map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
+      function initialize() {
+        var latlng = new google.maps.LatLng(25.208605, -103.057424); 
+        var myOptions = { 
+          zoom: 6, 
+          center: latlng, 
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          styles: [
+            {
+                "elementType": "labels.text",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "landscape.natural",
+                "elementType": "geometry.fill",
+                "stylers": [
+                    {
+                        "color": "#f5f5f2"
+                    },
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.attraction",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "landscape.man_made",
+                "elementType": "geometry.fill",
+                "stylers": [
+                    {
+                        "color": "#ffffff"
+                    },
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.business",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.medical",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.place_of_worship",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.school",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.sports_complex",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#ffffff"
+                    },
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.arterial",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    },
+                    {
+                        "color": "#ffffff"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "labels.icon",
+                "stylers": [
+                    {
+                        "color": "#ffffff"
+                    },
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "labels.icon",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.arterial",
+                "stylers": [
+                    {
+                        "color": "#ffffff"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "stylers": [
+                    {
+                        "color": "#ffffff"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "labels.icon",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "labels.icon",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "stylers": [
+                    {
+                        "color": "#71c8d4"
+                    }
+                ]
+            },
+            {
+                "featureType": "landscape",
+                "stylers": [
+                    {
+                        "color": "#e5e8e7"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "stylers": [
+                    {
+                        "color": "#8ba129"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "stylers": [
+                    {
+                        "color": "#ffffff"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.sports_complex",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#c7c7c7"
+                    },
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "stylers": [
+                    {
+                        "color": "#a0d3d3"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "stylers": [
+                    {
+                        "color": "#91b65d"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "stylers": [
+                    {
+                        "gamma": 1.51
+                    }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.government",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "landscape",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.arterial",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "stylers": [
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "road"
+            },
+            {
+                "featureType": "road"
+            },
+            {},
+            {
+                "featureType": "road.highway"
+            }
+        ]
+        };
+        map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
-        var markers = new Array();
-        google.load('visualization', '1', {packages: ['corechart']});
+        google.load('visualization', '1', { packages: ['corechart'] });
         
         // SUMMARY CHARTS powered by Google Charts API
         // Settings     
-          function drawVisualization() {
+        function drawVisualization() {
+          var styleColor = "#7FCB7F"; // Pastel green
            
-          var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e"  // FlockTrackerMX Log
-          var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm" // FlockTrackerMX Survey
-          
+          var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
+          var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
           var url_triplog = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_triplog);
           var url_survey = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_survey);
 
-
-            
-            google.visualization.drawChart({
-            "containerId": "chart1",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT count(TripID) FROM " + fusiontable_triplog,
-            "refreshInterval": 5,
-            "chartType": "ImageBarChart",
-            "options": {
-              "height" : 200,
-          //  "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
-              "isVertical": 'true',
-              }
-            });
-            
-          google.visualization.drawChart({
-               "containerId": "chart2",
-               "dataSourceUrl": url_triplog,
-               "query":"SELECT Date, count(TripID) FROM " + fusiontable_triplog +  "GROUP BY Date ORDER BY Date ASC",
-               "refreshInterval": 5,
-               "chartType": "LineChart",
-               "options": {
-                 "height" : 200,
-          //   "colors": '0D72B9',
-                 "vAxis": {"title": ""},
-                 "hAxis": {"title": 'Number of Trips'},
-                 "legend": 'none',
-               "showAxisLines": 'false',
-              }
-              });  
-
+          var queryText = encodeURIComponent("SELECT count(SurveyID) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm");
         
-           google.visualization.drawChart({
-                 "containerId": "chart3",
-                 "dataSourceUrl": url_survey,
-                 "query":"SELECT count(SurveyID) FROM " + fusiontable_survey,
-                 "refreshInterval": 5,
-                "chartType": "ImageBarChart",
-                 "options": {
-                   "height" : 200,
-          //     "colors": 'FF0000',
-                   "vAxis": {"title": ""},
-                   "hAxis": {"title": ""},
-                   "legend": 'none',
-              "showAxisLines": 'false',
-              "isVertical": 'true',
-                }
-                });
-          
           google.visualization.drawChart({
-                 "containerId": "chart4",
-                 "dataSourceUrl": url_survey,
-                 "query":"SELECT Date, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Date ORDER BY Date ASC",
-                 "refreshInterval": 5,
-                "chartType": "LineChart",
-                 "options": {
-                   "height" : 200,
-            //   "colors": 'FF0000',
-                   "vAxis": {"title": ""},
-                   "hAxis": {"title": ""},
-                   "legend": 'none',
-              "showAxisLines": 'false',
-                }
-                });
-          
-           google.visualization.drawChart({
-            "containerId": "chart8",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
+            "containerId": "chart3",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query": "SELECT q12_pointperception FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm",
             "refreshInterval": 5,
             "chartType": "BarChart",
             "options": {
-              "height" : 400,
-          //    "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
+              "title":"Yearly Coffee Consumption by Country",
+              "vAxis": {"title": "vaxYear"},
+              "hAxis": {"title": "haxCups"}
               }
             });
-            
-          google.visualization.drawChart({
-            "containerId": "chart9",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-            "refreshInterval": 5,
-            "chartType": "BarChart",
-            "options": {
-              "height" : 400,
-          //    "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
-              }
-            });
-            
-          google.visualization.drawChart({
-            "containerId": "chart10",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-            "refreshInterval": 5,
-            "chartType": "BarChart",
-            "options": {
-              "height" : 400,
-        //      "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
-              }
-            });
-
-          google.visualization.drawChart({
-            "containerId": "chart11",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-            "refreshInterval": 5,
-            "chartType": "BarChart",
-            "options": {
-              "height" : 400,
-            //  "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
-              }
-            });
-          
-          google.visualization.drawChart({
-                  "containerId": "chart5",
-                  "dataSourceUrl": url_triplog,
-                  "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "BarChart",
-                  "options": {
-                    "height" : 200,
-           //         "colors": 'FF0000',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                    "legend": 'none',
-                  }
-                });
-          
-          google.visualization.drawChart({
-                  "containerId": "chart6",
-                  "dataSourceUrl": url_triplog,
-              "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "BarChart",
-                  "options": {
-                    "height" : 200,
-            //        "colors": 'FF0000',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                    "legend": 'none',
-                  }
-                });
-          
-          google.visualization.drawChart({
-                  "containerId": "chart7",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Username, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "BarChart",
-                  "options": {
-                    "height" : 200,
-                   // "colors": 'FF0000',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                    "legend": 'none',
-                  }
-                });
-           google.visualization.drawChart({
-                  "containerId": "chart12",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Transecto, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Transecto ORDER BY count(SeurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-               //     "width"  : 290,
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                 //   "legend": 'none',
-                  }
-                });
-                
-           google.visualization.drawChart({
-                  "containerId": "chart13",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Vivienda, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Vivienda ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-                //    "width"  : 290,    
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-               //    "legend": 'none',
-                  }
-                });
-                
-            google.visualization.drawChart({
-                  "containerId": "chart14",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Construido, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Construido ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-                   // "width"  : 290,    
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-               //    "legend": 'none',
-                  }
-                });  
-                
-         google.visualization.drawChart({
-                  "containerId": "chart15",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Equipamiento, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Equipamiento ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-              //      "width"  : 290,    
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-               //    "legend": 'none',
-                  }
-                });
-           google.visualization.drawChart({
-                  "containerId": "chart16",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Vacio, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Vacio ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-               //     "width"  : 290,
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                 //   "legend": 'none',
-                  }
-                });
-                      }
+        }
         google.setOnLoadCallback(drawVisualization);
         </script>
 
@@ -673,8 +432,8 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Average Altitude</h3>
-              <div id="chart3" style="float: left; z-index: 2; position: relative;">
+              <h3 class="panel-title">Chart One</h3>
+              <div id="chart1" style="float: left; z-index: 2; position: relative;">
               </div>
             </div>
             <div class="panel-body">
@@ -683,10 +442,10 @@
           </div>
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel aatitle</h3>
+              <h3 class="panel-title">Chart Two</h3>
             </div>
             <div class="panel-body">
-              Panel content
+              Panel Chart Two content
               <div id="testOne"></div>
             </div>
           </div>
@@ -694,10 +453,15 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel tqqqitle</h3>
+              <h3 class="panel-title">Chart Three</h3>
             </div>
             <div class="panel-body">
-              Panel content
+              <div id="chart3"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;"></div>
             </div>
           </div>
           <div class="panel panel-success">
