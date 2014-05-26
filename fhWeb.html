@@ -13,13 +13,14 @@
 
     <!-- Google Maps API -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=visualization"></script> 
+      <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
+    google.load('visualization', '1', {packages: ['corechart']});
     var map;
     var context;
     var particles;
     var pointArray=[];
-
-    function initialize() {
+    function initialize() { 
       var latlng = new google.maps.LatLng(25.208605, -103.057424); 
       var myOptions = { 
         zoom: 6, 
@@ -341,8 +342,40 @@
       ]
       };
       map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+                
+      queryProjects();
     }
     google.maps.event.addDomListener(window, 'load', initialize);
+    
+    
+    // Getting project list from Fusion Tables
+          function queryProjects(){
+      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"  // Table with project names and fusion tables ids
+      var queryString = "SELECT project_name FROM " + fusiontable_project_names;
+                       
+      var query = new google.visualization.Query(
+						'http://www.google.com/fusiontables/gvizdata?tq=' +	
+						encodeURIComponent(queryString));   
+            query.send(queryProjects2);
+
+      }
+      function queryProjects2(response){
+        var table = response.getDataTable(); 
+	      var rows = table.getNumberOfRows();
+        alert("rows " + rows);
+        var select = document.getElementById("projectSelectorDropdown"); 
+        for (var i = 0; i < rows; i++){                
+            var opt = table.getValue(i, 0);  
+            var el = document.createElement("option");
+            el.text = opt;
+            el.value = opt;
+            alert("option " + opt); 
+            select.appendChild(el);
+        }
+        }
+      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    
     </script>
 
     <script type="text/javascript">
@@ -647,7 +680,7 @@
             <li class="active"><a href="#">Tijuana</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" id="projectSelectorDropdown">
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>
                 <li><a href="#">Something else here</a></li>
