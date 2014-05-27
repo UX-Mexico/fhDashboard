@@ -385,7 +385,6 @@
         // SUMMARY CHARTS powered by Google Charts API
         // Settings     
         function drawVisualization() {
-          var styleColor = "#7FCB7F"; // Pastel green
            
           var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
           var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
@@ -398,14 +397,15 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT count(TripID), count(q1) FROM " + fusiontable_triplog,
             "refreshInterval": 5,
-            "chartType": "ColumnChart",
+            "chartType": "BarChart",
             "color": "green", //#99E699,
             "options": {
               "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
-              "hAxis": {"title": "Example X-Axis"}
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
               }
             });
         
@@ -413,14 +413,15 @@
           google.visualization.drawChart({
             "containerId": "chart2",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
               "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
-              "hAxis": {"title": "Example X-Axis"}
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
               }
             });
         
@@ -428,14 +429,15 @@
           google.visualization.drawChart({
             "containerId": "chart3",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
               "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
-              "hAxis": {"title": "Example X-Axis"}
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
               }
             });
         
@@ -443,14 +445,15 @@
           google.visualization.drawChart({
             "containerId": "chart4",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
               "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
-              "hAxis": {"title": "Example X-Axis"}
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
               }
             });
         
@@ -458,14 +461,15 @@
           google.visualization.drawChart({
             "containerId": "chart5",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Date, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Date ORDER BY Date ASC",
             "refreshInterval": 5,
-            "chartType": "ColumnChart",
+            "chartType": "LineChart",
             "color": "green", //#99E699,
             "options": {
               "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
-              "hAxis": {"title": "Example X-Axis"}
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
               }
             });
         
@@ -473,14 +477,15 @@
           google.visualization.drawChart({
             "containerId": "chart6",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
               "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
-              "hAxis": {"title": "Example X-Axis"}
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
               }
             });
         }
