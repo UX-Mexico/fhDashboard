@@ -22,7 +22,7 @@
     var particles;
     var pointArray=[];
     function initialize() { 
-      var latlng = new google.maps.LatLng(25.208605, -103.057424); 
+      var latlng = new google.maps.LatLng(22.208605, -103.057424); 
       var myOptions = { 
         zoom: 6, 
         center: latlng, 
@@ -346,8 +346,11 @@
       layer_0 = new google.maps.FusionTablesLayer({
         query: {
           select: "col2",
-          from: "1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ"
-        }
+          from: "1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ" // We need to make this global or interchangeable...
+        },
+        map: map,
+        styleId: 2,
+        templateId: 2
       });
       queryProjects();
                 
