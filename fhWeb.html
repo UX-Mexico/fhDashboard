@@ -342,8 +342,8 @@
       ]
       };
       map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-                
       queryProjects();
+                
     }
     google.maps.event.addDomListener(window, 'load', initialize);
     
@@ -367,7 +367,9 @@
         for (var i = 0; i < rows; i++){                
             var opt = table.getValue(i, 0);  
             var li = document.createElement("li");
-            li.appendChild(document.createTextNode(opt));
+            var text = document.createTextNode(opt);
+            text.href = "#";
+            li.appendChild(text);
             alert("option " + opt); 
             list.appendChild(li);
         }
