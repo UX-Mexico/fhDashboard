@@ -17,6 +17,7 @@
     <script type="text/javascript">
     google.load('visualization', '1', {packages: ['corechart']});
     var map;
+    var layer_0;
     var context;
     var particles;
     var pointArray=[];
@@ -342,6 +343,12 @@
       ]
       };
       map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+      layer_0 = new google.maps.FusionTablesLayer({
+        query: {
+          select: "col2",
+          from: "1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ"
+        }
+      });
       queryProjects();
                 
     }
@@ -349,8 +356,8 @@
     
     
     // Getting project list from Fusion Tables
-          function queryProjects(){
-      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"  // Table with project names and fusion tables ids
+    function queryProjects(){
+      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
       var queryString = "SELECT project_name FROM " + fusiontable_project_names;
                        
       var query = new google.visualization.Query(
@@ -359,9 +366,10 @@
             query.send(queryProjects2);
 
       }
+
       function queryProjects2(response){
         var table = response.getDataTable(); 
-	      var rows = table.getNumberOfRows();
+        var rows = table.getNumberOfRows();
         alert("rows " + rows);
         var list = document.getElementById("projectSelectorDropdown"); 
         for (var i = 0; i < rows; i++){                
@@ -372,9 +380,8 @@
             li.appendChild(text);
             alert("option " + opt); 
             list.appendChild(li);
+          }
         }
-        }
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
     </script>
 
@@ -397,7 +404,7 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT count(TripID), count(q1) FROM " + fusiontable_triplog,
+            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusiontable_triplog,
             "refreshInterval": 5,
             "chartType": "BarChart",
             "color": "green", //#99E699,
@@ -639,7 +646,22 @@
     </div>
 
 
+  <br>
+  <br>
+  <br>
 
+  <hr>
+
+  <br>
+  <br>
+  <br>
+
+  <div><table align="center"><tr><td><a href="http://www.dusp.mit.edu"><img src="./img/partner_logos-01.png" style="opacity:0.4"/></a></td><td><a href="http://www.urbanlaunchpad.org/"><img src="./img/partner_logos-02.png" style="opacity:0.4"/></a></td><td><a href="http://smart.mit.edu/"><img src="./img/partner_logos-03.png" style="opacity:0.4"/></a></td><td><a href="http://smart.mit.edu/research/future-urban-mobility/future-urban-mobility.html"><img src="./img/partner_logos-04.png" style="opacity:0.4"/></a></td><td><a href="http://misti.mit.edu/mit-mexico"><img src="./img/partner_logos-05.png" style="opacity:0.4"/></a></td><td><a href="http://www.grupoprodi.com/"><img src="./img/partner_logos-06.png" style="opacity:0.4"/></a></td></tr></table></div>
+  <center>Some of our past and current partners.</center><br>
+
+  <br>
+  <br>
+  <br>
 
 
     <!-- Bootstrap core JavaScript
@@ -649,8 +671,4 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/docs.min.js"></script>
   </body>
-</html>
-
-
-</body>
 </html>
