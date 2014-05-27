@@ -376,279 +376,114 @@
         }
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
-    
     </script>
 
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
-        var markers = new Array();
-        google.load('visualization', '1', {packages: ['corechart']});
+        google.load('visualization', '1', { packages: ['corechart'] });
         
         // SUMMARY CHARTS powered by Google Charts API
         // Settings     
-          function drawVisualization() {
+        function drawVisualization() {
+          var styleColor = "#7FCB7F"; // Pastel green
            
-          var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e"  // FlockTrackerMX Log
-          var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm" // FlockTrackerMX Survey
-          
+          var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
+          var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
           var url_triplog = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_triplog);
           var url_survey = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_survey);
 
-
-            
-            google.visualization.drawChart({
-            "containerId": "chart1",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT count(TripID) FROM " + fusiontable_triplog,
-            "refreshInterval": 5,
-            "chartType": "ImageBarChart",
-            "options": {
-              "height" : 200,
-          //  "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
-              "isVertical": 'true',
-              }
-            });
-            
-          google.visualization.drawChart({
-               "containerId": "chart2",
-               "dataSourceUrl": url_triplog,
-               "query":"SELECT Date, count(TripID) FROM " + fusiontable_triplog +  "GROUP BY Date ORDER BY Date ASC",
-               "refreshInterval": 5,
-               "chartType": "LineChart",
-               "options": {
-                 "height" : 200,
-          //   "colors": '0D72B9',
-                 "vAxis": {"title": ""},
-                 "hAxis": {"title": 'Number of Trips'},
-                 "legend": 'none',
-               "showAxisLines": 'false',
-              }
-              });  
-
+          var queryText = encodeURIComponent("SELECT count(SurveyID) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm");
         
-           google.visualization.drawChart({
-                 "containerId": "chart3",
-                 "dataSourceUrl": url_survey,
-                 "query":"SELECT count(SurveyID) FROM " + fusiontable_survey,
-                 "refreshInterval": 5,
-                "chartType": "ImageBarChart",
-                 "options": {
-                   "height" : 200,
-          //     "colors": 'FF0000',
-                   "vAxis": {"title": ""},
-                   "hAxis": {"title": ""},
-                   "legend": 'none',
-              "showAxisLines": 'false',
-              "isVertical": 'true',
-                }
-                });
-          
+          // Chart 1
           google.visualization.drawChart({
-                 "containerId": "chart4",
-                 "dataSourceUrl": url_survey,
-                 "query":"SELECT Date, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Date ORDER BY Date ASC",
-                 "refreshInterval": 5,
-                "chartType": "LineChart",
-                 "options": {
-                   "height" : 200,
-            //   "colors": 'FF0000',
-                   "vAxis": {"title": ""},
-                   "hAxis": {"title": ""},
-                   "legend": 'none',
-              "showAxisLines": 'false',
-                }
-                });
-          
-           google.visualization.drawChart({
-            "containerId": "chart8",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
+            "containerId": "chart1",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "BarChart",
+            "chartType": "ColumnChart",
+            "color": "green", //#99E699,
             "options": {
-              "height" : 400,
-          //    "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"}
               }
             });
-            
+        
+          // Chart 2
           google.visualization.drawChart({
-            "containerId": "chart9",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
+            "containerId": "chart2",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "BarChart",
+            "chartType": "ColumnChart",
+            "color": "green", //#99E699,
             "options": {
-              "height" : 400,
-          //    "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"}
               }
             });
-            
+        
+          // Chart 3
           google.visualization.drawChart({
-            "containerId": "chart10",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
+            "containerId": "chart3",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "BarChart",
+            "chartType": "ColumnChart",
+            "color": "green", //#99E699,
             "options": {
-              "height" : 400,
-        //      "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"}
               }
             });
-
+        
+          // Chart 4
           google.visualization.drawChart({
-            "containerId": "chart11",
-                  "dataSourceUrl": url_triplog,
-            "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
+            "containerId": "chart4",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "BarChart",
+            "chartType": "ColumnChart",
+            "color": "green", //#99E699,
             "options": {
-              "height" : 400,
-            //  "colors": 'FF0000',
-              "vAxis": {"title": ""},
-              "hAxis": {"title": ""},
-              "legend": 'none',
-              "showAxisLines": 'false',
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"}
               }
             });
-          
+        
+          // Chart 5
           google.visualization.drawChart({
-                  "containerId": "chart5",
-                  "dataSourceUrl": url_triplog,
-                  "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "BarChart",
-                  "options": {
-                    "height" : 200,
-           //         "colors": 'FF0000',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                    "legend": 'none',
-                  }
-                });
-          
+            "containerId": "chart5",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "refreshInterval": 5,
+            "chartType": "ColumnChart",
+            "color": "green", //#99E699,
+            "options": {
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"}
+              }
+            });
+        
+          // Chart 6
           google.visualization.drawChart({
-                  "containerId": "chart6",
-                  "dataSourceUrl": url_triplog,
-              "query":"SELECT Username, count(TripID) FROM " + fusiontable_triplog + "  GROUP BY Username ORDER BY count(TripID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "BarChart",
-                  "options": {
-                    "height" : 200,
-            //        "colors": 'FF0000',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                    "legend": 'none',
-                  }
-                });
-          
-          google.visualization.drawChart({
-                  "containerId": "chart7",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Username, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "BarChart",
-                  "options": {
-                    "height" : 200,
-                   // "colors": 'FF0000',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                    "legend": 'none',
-                  }
-                });
-           google.visualization.drawChart({
-                  "containerId": "chart12",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Transecto, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Transecto ORDER BY count(SeurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-               //     "width"  : 290,
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                 //   "legend": 'none',
-                  }
-                });
-                
-           google.visualization.drawChart({
-                  "containerId": "chart13",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Vivienda, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Vivienda ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-                //    "width"  : 290,    
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-               //    "legend": 'none',
-                  }
-                });
-                
-            google.visualization.drawChart({
-                  "containerId": "chart14",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Construido, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Construido ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-                   // "width"  : 290,    
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-               //    "legend": 'none',
-                  }
-                });  
-                
-         google.visualization.drawChart({
-                  "containerId": "chart15",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Equipamiento, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Equipamiento ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-              //      "width"  : 290,    
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-               //    "legend": 'none',
-                  }
-                });
-           google.visualization.drawChart({
-                  "containerId": "chart16",
-                  "dataSourceUrl": url_survey,
-              "query":"SELECT Vacio, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Vacio ORDER BY count(SurveyID) DESC",
-                "refreshInterval": 5,
-                 "chartType": "PieChart",
-                  "options": {
-                    "height" : 200,
-               //     "width"  : 290,
-              //      "colors": 'FFFFFF',
-                    "vAxis": {"title": ""},
-                    "hAxis": {"title": ""},
-                 //   "legend": 'none',
-                  }
-                });
-                      }
+            "containerId": "chart6",
+            "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+            "query":"SELECT Username, count(q1) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm GROUP BY Username ORDER BY count(q1) DESC",
+            "refreshInterval": 5,
+            "chartType": "ColumnChart",
+            "color": "green", //#99E699,
+            "options": {
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"}
+              }
+            });
+        }
         google.setOnLoadCallback(drawVisualization);
         </script>
 
@@ -698,64 +533,104 @@
         <h1>Visual Statistics</h1>
       </div>
       <div class="row">
+
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Average Altitude</h3>
-              <div id="chart3" style="float: left; z-index: 2; position: relative;">
+              <h3 class="panel-title">Chart One</h3>
+            </div>
+            <div class="panel-body">
+              <div id="chart1"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;">
               </div>
             </div>
-            <div class="panel-body">
-              <iframe width="325" height="250" scrolling="no" frameborder="no" src="https://www.google.com/fusiontables/embedviz?containerId=googft-gviz-canvas&amp;q=select+col25%2C+col26+from+1IMXLkiciCB9Fuuqnudr7eBZvNtBSEY_kKgH2oV9h+order+by+col25+asc&amp;viz=GVIZ&amp;t=SCATTER&amp;rmax=250&amp;uiversion=2&amp;gco_forceIFrame=true&amp;gco_hasLabelsColumn=true&amp;width=325&amp;height=250"></iframe>
-            </div>
           </div>
+          
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel aatitle</h3>
+              <h3 class="panel-title">Chart Two</h3>
             </div>
             <div class="panel-body">
-              Panel content
-              <div id="testOne"></div>
+              <div id="chart2"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;">
+              </div>
             </div>
           </div>
         </div><!-- /.col-sm-4 -->
+
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel tqqqitle</h3>
+              <h3 class="panel-title">Chart Three</h3>
             </div>
             <div class="panel-body">
-              Panel content
+              <div id="chart3"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;">
+              </div>
             </div>
           </div>
+          
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel sstitle</h3>
+              <h3 class="panel-title">Chart Four</h3>
             </div>
             <div class="panel-body">
-              Panel content
+              <div id="chart4"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;">
+              </div>
             </div>
           </div>
         </div><!-- /.col-sm-4 -->
+
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel title</h3>
+              <h3 class="panel-title">Chart Five</h3>
             </div>
             <div class="panel-body">
-              Panel content
+              <div id="chart5"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;">
+              </div>
             </div>
           </div>
+          
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Panel title</h3>
+              <h3 class="panel-title">Chart Six</h3>
             </div>
             <div class="panel-body">
-              Panel content
+              <div id="chart6"
+                style=  "width: 325px; 
+                        height: 250px;
+                        float: left;
+                        z-index: 2;
+                        position: relative;">
+              </div>
             </div>
           </div>
         </div><!-- /.col-sm-4 -->
-      </div>
+
+      </div><!-- /.row -->
     </div>
 
 
