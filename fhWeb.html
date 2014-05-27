@@ -8,8 +8,35 @@
     <meta name="author" content="">
     <link rel="icon" href="img/favicon.ico">
 
-    <!-- Stamen Base Maps -->
-    <script type="text/javascript" src="./js/tile.stamen.js"></script>
+    <script>   
+    // Getting project list from Fusion Tables
+    function queryProjects(){
+      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
+      var queryString = "SELECT project_name FROM " + fusiontable_project_names;
+                       
+      var query = new google.visualization.Query(
+            'http://www.google.com/fusiontables/gvizdata?tq=' + 
+            encodeURIComponent(queryString));   
+            query.send(queryProjects2);
+
+      }
+
+      function queryProjects2(response){
+        var table = response.getDataTable();
+        var rows = table.getNumberOfRows();
+        alert("rows " + rows);
+        var list = document.getElementById("projectSelectorDropdown"); 
+        for (var i = 0; i < rows; i++){                
+            var opt = table.getValue(i, 0);  
+            var li = document.createElement("li");
+            var text = document.createTextNode(opt);
+            text.href = "#";
+            li.appendChild(text);
+            alert("option " + opt); 
+            list.appendChild(li);
+          }
+        }    
+    </script>
 
     <!-- Google Maps API -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=visualization"></script> 
@@ -356,36 +383,6 @@
                 
     }
     google.maps.event.addDomListener(window, 'load', initialize);
-    
-    
-    // Getting project list from Fusion Tables
-    function queryProjects(){
-      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
-      var queryString = "SELECT project_name FROM " + fusiontable_project_names;
-                       
-      var query = new google.visualization.Query(
-						'http://www.google.com/fusiontables/gvizdata?tq=' +	
-						encodeURIComponent(queryString));   
-            query.send(queryProjects2);
-
-      }
-
-      function queryProjects2(response){
-        var table = response.getDataTable(); 
-        var rows = table.getNumberOfRows();
-        alert("rows " + rows);
-        var list = document.getElementById("projectSelectorDropdown"); 
-        for (var i = 0; i < rows; i++){                
-            var opt = table.getValue(i, 0);  
-            var li = document.createElement("li");
-            var text = document.createTextNode(opt);
-            text.href = "#";
-            li.appendChild(text);
-            alert("option " + opt); 
-            list.appendChild(li);
-          }
-        }
-    
     </script>
 
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
@@ -530,11 +527,17 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Tijuana</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
-              <ul class="dropdown-menu" id="projectSelectorDropdown">
-
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project Select<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">About</li>
+                <li><a href="http://www.fundacionhogares.org/">Fundación Hogares</a></li>
+                <li><a href="http://flocktracker.mit.edu/">Flocktracker</a></li>
               </ul>
-            </li>         
+            </li>       
           </ul>
         </div><!--/.nav-collapse -->
       </div>
