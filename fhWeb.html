@@ -8,36 +8,36 @@
     <meta name="author" content="">
     <link rel="icon" href="img/favicon.ico">
 
-    <script>   
-    // Getting project list from Fusion Tables
+    <script type="text/javascript">  
+    // Getting project list from Fusion Tables   
     function queryProjects(){
       var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
-      var queryString = "SELECT project_name FROM " + fusiontable_project_names;
-                       
+      var queryString = "SELECT project_name, fusion_table FROM " + fusiontable_project_names;                 
       var query = new google.visualization.Query(
             'http://www.google.com/fusiontables/gvizdata?tq=' + 
             encodeURIComponent(queryString));   
             query.send(queryProjects2);
-
       }
-
       function queryProjects2(response){
         var table = response.getDataTable();
         var rows = table.getNumberOfRows();
-        // alert("rows " + rows);
         var list = document.getElementById("projectSelectorDropdown"); 
-        for (var i = 0; i < rows; i++){                
-            var opt = table.getValue(i, 0);  
+        for (var i = 0; i < rows; i++){ 
+            var fusionTableId = table.getValue(i, 1);           
+            var opt = table.getValue(i, 0);     
             var li = document.createElement("li");
             var link = document.createElement("a");             
             var text = document.createTextNode(opt);
             link.appendChild(text);
-            link.href = "#";
+            link.setAttribute('onclick', "setSourceTable('" + fusionTableId + "')");    
             li.appendChild(link);
-            // alert("option " + opt); 
             list.appendChild(li);
           }
         }    
+            
+      function setSourceTable(fusionTableID){
+        alert("on set" + fusionTableID);
+      }
     </script>
 
     <!-- Google Maps API -->
