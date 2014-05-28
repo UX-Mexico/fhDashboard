@@ -24,15 +24,17 @@
       function queryProjects2(response){
         var table = response.getDataTable();
         var rows = table.getNumberOfRows();
-        alert("rows " + rows);
+        // alert("rows " + rows);
         var list = document.getElementById("projectSelectorDropdown"); 
         for (var i = 0; i < rows; i++){                
             var opt = table.getValue(i, 0);  
             var li = document.createElement("li");
+            var link = document.createElement("a");             
             var text = document.createTextNode(opt);
-            text.href = "#";
-            li.appendChild(text);
-            alert("option " + opt); 
+            link.appendChild(text);
+            link.href = "#";
+            li.appendChild(link);
+            // alert("option " + opt); 
             list.appendChild(li);
           }
         }    
@@ -396,7 +398,7 @@
         styleId: 2,
         templateId: 2
       });
-      queryProjects();
+      // queryProjects();
                 
     }
     google.maps.event.addDomListener(window, 'load', initialize);
@@ -546,7 +548,6 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
               <ul class="dropdown-menu" id="projectSelectorDropdown">
-
               </ul>
             </li>         
           </ul>
@@ -684,6 +685,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script>queryProjects();</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/docs.min.js"></script>
