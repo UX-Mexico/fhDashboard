@@ -29,14 +29,14 @@
             var link = document.createElement("a");             
             var text = document.createTextNode(opt);
             link.appendChild(text);
-            link.setAttribute('onclick', "setSourceTable('" + fusionTableId + "')");    
+            link.setAttribute('onclick', "refreshInfo('" + fusionTableId + "')");    
             li.appendChild(link);
             list.appendChild(li);
           }
         }    
             
-      function setSourceTable(fusionTableID){
-        alert("on set" + fusionTableID);
+      function refreshInfo(fusionTableID){
+        loadMap(fusionTableID);
       }
     </script>
 
@@ -408,7 +408,6 @@
     google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 
-    // Chart stuff
     <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
         google.load('visualization', '1', { packages: ['corechart'] });
