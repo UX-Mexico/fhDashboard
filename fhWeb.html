@@ -29,14 +29,15 @@
             var link = document.createElement("a");             
             var text = document.createTextNode(opt);
             link.appendChild(text);
-            link.setAttribute('onclick', "refreshInfo('" + fusionTableId + "')");    
+            link.setAttribute('onclick', "refreshInfo('" + fusionTableId + "','" + opt + "')");    
             li.appendChild(link);
             list.appendChild(li);
           }
         }    
             
-      function refreshInfo(fusionTableID){
+      function refreshInfo(fusionTableID, activeProject){
         loadMap(fusionTableID);
+        setActiveProject(activeProject);
       }
     </script>
 
@@ -65,6 +66,13 @@
     var pointArray=[];
     function initialize(){
       loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+    }
+    
+    function setActiveProject(activeProject){
+        activeProjectLink = document.getElementById("activeProject");    
+        var text = document.createTextNode(activeProject);
+        activeProjectLink.removeChild( activeProjectLink.firstChild )
+        activeProjectLink.appendChild(text);
     }
     
     function loadMap(fusionTableID) { 
@@ -548,7 +556,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Tijuana</a></li>
+            <li class="active"><a href="#" id="activeProject">ActiveProject</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
               <ul class="dropdown-menu" id="projectSelectorDropdown">
