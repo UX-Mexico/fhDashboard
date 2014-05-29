@@ -37,7 +37,7 @@
             
       function refreshInfo(fusionTableID, activeProject){
         loadMap(fusionTableID);
-        setActiveProject(activeProject);
+        setActiveProject(activeProject, fusionTableID);
       }
     </script>
 
@@ -68,11 +68,12 @@
       loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
     }
     
-    function setActiveProject(activeProject){
+    function setActiveProject(activeProject, fusionTableID){
         activeProjectLink = document.getElementById("activeProject");    
         var text = document.createTextNode(activeProject);
         activeProjectLink.removeChild( activeProjectLink.firstChild )
         activeProjectLink.appendChild(text);
+        activeProjectLink.setAttribute('onclick', "loadMap('" + fusionTableID + "')");
     }
     
     function loadMap(fusionTableID) { 
