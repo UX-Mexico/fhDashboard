@@ -78,7 +78,7 @@
     function setActiveProject(activeProject, fusionTableID){
         activeProjectLink = document.getElementById("activeProject");    
         var text = document.createTextNode(activeProject);
-        activeProjectLink.removeChild( activeProjectLink.firstChild )
+        activeProjectLink.removeChild( activeProjectLink.firstChild );
         activeProjectLink.appendChild(text);
         activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableID + "')");
     }
@@ -88,7 +88,7 @@
       var myOptions = { 
         zoom: 6, 
         center: latlng, 
-        disableDefaultUI: true,
+        disableDefaultUI: false,
         navigationControl: false,
         mapTypeControl: false,
         streetViewControl: false,
@@ -574,6 +574,8 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
+
+    <div class="navbar-header" style="padding-top:8px;"><img src="img/ft_logoxl.png" style="width:70px;"/></div>
 
     <div id="map-canvas"></div>
 
