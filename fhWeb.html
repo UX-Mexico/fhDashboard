@@ -36,7 +36,7 @@
         }    
             
       function refreshInfo(fusionTableID, activeProject){
-        loadMap(fusionTableID);
+        loadInfo(fusionTableID);
         setActiveProject(activeProject, fusionTableID);
       }
     </script>
@@ -64,8 +64,15 @@
     var context;
     var particles;
     var pointArray=[];
+    
+    function loadInfo(fusionTableID){
+          loadMap(fusionTableID);
+          drawVisualization(fusionTableID);
+    }
+    
     function initialize(){
       loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+      drawVisualization("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
     }
     
     function setActiveProject(activeProject, fusionTableID){
@@ -73,7 +80,7 @@
         var text = document.createTextNode(activeProject);
         activeProjectLink.removeChild( activeProjectLink.firstChild )
         activeProjectLink.appendChild(text);
-        activeProjectLink.setAttribute('onclick', "loadMap('" + fusionTableID + "')");
+        activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableID + "')");
     }
     
     function loadMap(fusionTableID) { 
@@ -423,12 +430,12 @@
         
         // SUMMARY CHARTS powered by Google Charts API
         // Settings     
-        function drawVisualization() {
+        function drawVisualization(fusionTableID) {
            
-          var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
-          var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
-          var url_triplog = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_triplog);
-          var url_survey = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_survey);
+          // var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
+          // var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
+          // var url_triplog = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_triplog);
+          // var url_survey = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_survey);
 
           var queryText = encodeURIComponent("SELECT count(SurveyID) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm");
         
@@ -436,7 +443,7 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusiontable_triplog,
+            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusionTableID,
             "refreshInterval": 5,
             "chartType": "BarChart",
             "color": "green", //#99E699,
@@ -452,7 +459,7 @@
           google.visualization.drawChart({
             "containerId": "chart2",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -468,7 +475,7 @@
           google.visualization.drawChart({
             "containerId": "chart3",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -484,7 +491,7 @@
           google.visualization.drawChart({
             "containerId": "chart4",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -500,7 +507,7 @@
           google.visualization.drawChart({
             "containerId": "chart5",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Date, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Date ORDER BY Date ASC",
+            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
             "refreshInterval": 5,
             "chartType": "LineChart",
             "color": "green", //#99E699,
@@ -516,7 +523,7 @@
           google.visualization.drawChart({
             "containerId": "chart6",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -528,7 +535,7 @@
               }
             });
         }
-        google.setOnLoadCallback(drawVisualization);
+        // google.setOnLoadCallback(drawVisualization);
         </script>
 
     <!-- Base Bootstrap Content -->
