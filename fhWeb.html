@@ -18,24 +18,19 @@
             'http://www.google.com/fusiontables/gvizdata?tq=' + 
             encodeURIComponent(queryString));   
             query.send(queryProjects2);
-
+      return query;
       }
 
       function queryProjects2(response){
         var table = response.getDataTable();
         var rows = table.getNumberOfRows();
-        alert("rows " + rows);
-        var list = document.getElementById("projectSelectorDropdown"); 
+        var list = []; 
         for (var i = 0; i < rows; i++){                
-            var opt = table.getValue(i, 0);  
-            var li = document.createElement("li");
-            var text = document.createTextNode(opt);
-            text.href = "#";
-            li.appendChild(text);
-            alert("option " + opt); 
-            list.appendChild(li);
+            var opt = table.getValue(i, 0);
+            list.push(opt);
           }
-        }    
+        return list;
+        }   
     </script>
 
     <!-- Google Maps API -->
@@ -395,9 +390,7 @@
         map: map,
         styleId: 2,
         templateId: 2
-      });
-      queryProjects();
-                
+      });                
     }
     google.maps.event.addDomListener(window, 'load', initialize);
     </script>
@@ -546,6 +539,10 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
               <ul class="dropdown-menu" id="projectSelectorDropdown">
+
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
 
               </ul>
             </li>         
