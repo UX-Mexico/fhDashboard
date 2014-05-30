@@ -8,22 +8,24 @@
     <meta name="author" content="">
     <link rel="icon" href="img/favicon.ico">
 
-    <script>   
-    // Getting project list from Fusion Tables
+    <script type="text/javascript">  
+    // Getting project list from Fusion Tables   
     function queryProjects(){
       var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
-      var queryString = "SELECT project_name FROM " + fusiontable_project_names;
-                       
+      var queryString = "SELECT project_name, fusion_table FROM " + fusiontable_project_names;                 
       var query = new google.visualization.Query(
             'http://www.google.com/fusiontables/gvizdata?tq=' + 
             encodeURIComponent(queryString));   
             query.send(queryProjects2);
+<<<<<<< HEAD
       return query;
+=======
+>>>>>>> FETCH_HEAD
       }
-
       function queryProjects2(response){
         var table = response.getDataTable();
         var rows = table.getNumberOfRows();
+<<<<<<< HEAD
         var list = []; 
         for (var i = 0; i < rows; i++){                
             var opt = table.getValue(i, 0);
@@ -31,6 +33,26 @@
           }
         return list;
         }   
+=======
+        var list = document.getElementById("projectSelectorDropdown"); 
+        for (var i = 0; i < rows; i++){ 
+            var fusionTableId = table.getValue(i, 1);           
+            var opt = table.getValue(i, 0);     
+            var li = document.createElement("li");
+            var link = document.createElement("a");             
+            var text = document.createTextNode(opt);
+            link.appendChild(text);
+            link.setAttribute('onclick', "refreshInfo('" + fusionTableId + "','" + opt + "')");    
+            li.appendChild(link);
+            list.appendChild(li);
+          }
+        }    
+            
+      function refreshInfo(fusionTableID, activeProject){
+        loadInfo(fusionTableID);
+        setActiveProject(activeProject, fusionTableID);
+      }
+>>>>>>> FETCH_HEAD
     </script>
 
     <!-- Google Maps API -->
@@ -56,7 +78,26 @@
     var context;
     var particles;
     var pointArray=[];
-    function initialize() { 
+    
+    function loadInfo(fusionTableID){
+          loadMap(fusionTableID);
+          drawVisualization(fusionTableID);
+    }
+    
+    function initialize(){
+      loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+      drawVisualization("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+    }
+    
+    function setActiveProject(activeProject, fusionTableID){
+        activeProjectLink = document.getElementById("activeProject");    
+        var text = document.createTextNode(activeProject);
+        activeProjectLink.removeChild( activeProjectLink.firstChild )
+        activeProjectLink.appendChild(text);
+        activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableID + "')");
+    }
+    
+    function loadMap(fusionTableID) { 
       var latlng = new google.maps.LatLng(22.208605, -103.057424); 
       var myOptions = { 
         zoom: 6, 
@@ -385,12 +426,18 @@
       layer_0 = new google.maps.FusionTablesLayer({
         query: {
           select: "col2",
-          from: "1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ" // We need to make this global or interchangeable...
+          from: fusionTableID // We need to make this global or interchangeable...
         },
         map: map,
         styleId: 2,
         templateId: 2
+<<<<<<< HEAD
       });                
+=======
+      });
+      
+                
+>>>>>>> FETCH_HEAD
     }
     google.maps.event.addDomListener(window, 'load', initialize);
     </script>
@@ -401,12 +448,12 @@
         
         // SUMMARY CHARTS powered by Google Charts API
         // Settings     
-        function drawVisualization() {
+        function drawVisualization(fusionTableID) {
            
-          var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
-          var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
-          var url_triplog = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_triplog);
-          var url_survey = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_survey);
+          // var fusiontable_triplog = "1K7_OxNvqpfenqFx9zlBVb0R9nxiqTD2xreRPFE8e";
+          // var fusiontable_survey = "1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm";
+          // var url_triplog = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_triplog);
+          // var url_survey = 'http://www.google.com/fusiontables/gvizdata?tq=' + encodeURIComponent("SELECT * FROM " + fusiontable_survey);
 
           var queryText = encodeURIComponent("SELECT count(SurveyID) FROM 1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm");
         
@@ -414,7 +461,7 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusiontable_triplog,
+            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusionTableID,
             "refreshInterval": 5,
             "chartType": "BarChart",
             "color": "green", //#99E699,
@@ -430,7 +477,7 @@
           google.visualization.drawChart({
             "containerId": "chart2",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -446,7 +493,7 @@
           google.visualization.drawChart({
             "containerId": "chart3",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -462,7 +509,7 @@
           google.visualization.drawChart({
             "containerId": "chart4",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -478,7 +525,7 @@
           google.visualization.drawChart({
             "containerId": "chart5",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Date, count(SurveyID) FROM " + fusiontable_survey + " GROUP BY Date ORDER BY Date ASC",
+            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
             "refreshInterval": 5,
             "chartType": "LineChart",
             "color": "green", //#99E699,
@@ -494,7 +541,7 @@
           google.visualization.drawChart({
             "containerId": "chart6",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(q1) FROM " + fusiontable_survey + " GROUP BY Username ORDER BY count(q1) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -506,7 +553,7 @@
               }
             });
         }
-        google.setOnLoadCallback(drawVisualization);
+        // google.setOnLoadCallback(drawVisualization);
         </script>
 
     <!-- Base Bootstrap Content -->
@@ -535,15 +582,18 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Tijuana</a></li>
+            <li class="active"><a href="#" id="activeProject">ActiveProject</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
               <ul class="dropdown-menu" id="projectSelectorDropdown">
+<<<<<<< HEAD
 
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>
                 <li><a href="#">Something else here</a></li>
 
+=======
+>>>>>>> FETCH_HEAD
               </ul>
             </li>         
           </ul>
@@ -681,6 +731,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script>queryProjects();</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/docs.min.js"></script>
