@@ -71,8 +71,13 @@
     }
     
     function initialize(){
+<<<<<<< HEAD
       loadMap("1r1kPE0irUlLAuMIrpxjwBoJ2UhqryuxOO7V8Ybg8");
       drawVisualization("1r1kPE0irUlLAuMIrpxjwBoJ2UhqryuxOO7V8Ybg8");
+=======
+      loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+      drawVisualization("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+>>>>>>> FETCH_HEAD
     }
     
     function setActiveProject(activeProject, fusionTableID){
@@ -438,7 +443,11 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT count(SurveyID), count(SurveyID) FROM " + fusionTableID,
+=======
+            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusionTableID,
+>>>>>>> FETCH_HEAD
             "refreshInterval": 5,
             "chartType": "ColumnChart",
             "color": "green", //#99E699,
@@ -454,7 +463,11 @@
           google.visualization.drawChart({
             "containerId": "chart2",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT Username, count(SurveyID) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(SurveyID) DESC",
+=======
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
+>>>>>>> FETCH_HEAD
             "refreshInterval": 5,
             "chartType": "BarChart",
             "color": "green", //#99E699,
@@ -470,7 +483,11 @@
           google.visualization.drawChart({
             "containerId": "chart3",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
+=======
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
+>>>>>>> FETCH_HEAD
             "refreshInterval": 5,
             "chartType": "ScatterChart",
             "color": "green", //#99E699,
@@ -486,7 +503,11 @@
           google.visualization.drawChart({
             "containerId": "chart4",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT Vivienda, count(SurveyID) FROM " + fusionTableID + " GROUP BY Vivienda ORDER BY count(SurveyID) DESC",
+=======
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
+>>>>>>> FETCH_HEAD
             "refreshInterval": 5,
             "chartType": "PieChart",
             "color": "green", //#99E699,
@@ -502,7 +523,11 @@
           google.visualization.drawChart({
             "containerId": "chart5",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT Construido, count(SurveyID) FROM " + fusionTableID + " WHERE Construido > '' GROUP BY Construido ORDER BY count(SurveyID) DESC ",
+=======
+            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
+>>>>>>> FETCH_HEAD
             "refreshInterval": 5,
             "chartType": "PieChart",
             "color": "green", //#99E699,
@@ -518,7 +543,11 @@
           google.visualization.drawChart({
             "containerId": "chart6",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT Equipamiento, count(SurveyID) FROM " + fusionTableID + " WHERE Equipamiento > ''  GROUP BY Equipamiento ORDER BY count(SurveyID) DESC",
+=======
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
+>>>>>>> FETCH_HEAD
             "refreshInterval": 5,
             "chartType": "PieChart",
             "color": "green", //#99E699,
@@ -556,7 +585,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
+<<<<<<< HEAD
           <a class="navbar-brand" style="padding-top:8px;" href="http://www.fundacionhogares.org/"><img src="img/FH_Logo 2014.png" style="width:32px;"/></a>
+=======
+>>>>>>> FETCH_HEAD
           <a class="navbar-brand" style="padding-top:8px;" href="http://flocktracker.mit.edu"><img src="img/ft_logoxl.png" style="width:32px;"/></a>
           <a class="navbar-brand" href="#">FH Flocktracker Dashboard</a>
         </div>
