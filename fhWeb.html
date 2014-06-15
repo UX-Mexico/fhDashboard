@@ -6,38 +6,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="img/FH_Logo 2014.png">
+    <link rel="icon" href="img/favicon.ico">
 
     <script type="text/javascript">  
-    // Getting project list from Fusion Tables   
-    function queryProjects(){
-      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
-      var queryString = "SELECT project_name, fusion_table FROM " + fusiontable_project_names;                 
-      var query = new google.visualization.Query(
-            'http://www.google.com/fusiontables/gvizdata?tq=' + 
-            encodeURIComponent(queryString));   
-            query.send(queryProjects2);
+      // Getting project list from Fusion Tables   
+      function queryProjects(){
+        var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
+        var queryString = "SELECT project_name, fusion_table FROM " + fusiontable_project_names;                 
+        var query = new google.visualization.Query(
+              'http://www.google.com/fusiontables/gvizdata?tq=' + 
+              encodeURIComponent(queryString));   
+              query.send(queryProjects2);
       }
-      function queryProjects2(response){
-        var table = response.getDataTable();
+      function queryProjects2(projectResponse){
+        var table = projectResponse.getDataTable();
         var rows = table.getNumberOfRows();
-        var list = document.getElementById("projectSelectorDropdown"); 
-        for (var i = 0; i < rows; i++){ 
-            var fusionTableId = table.getValue(i, 1);           
-            var opt = table.getValue(i, 0);     
+        var list = document.getElementById("projectSelectorDropdown");
+        var fusionTableId = new Array(rows); 
+        var opt = new Array(rows); 
+        var bounds = new Array(rows); 
+        var mapDim = getMapDim();
+        var zoomLevel = new Array(rows);
+        for (var i = 0; i < rows; i++){  
+            fusionTableId[i] = table.getValue(i, 1);        
+            opt[i] = table.getValue(i, 0);
+            var queryLimitsString = "SELECT MAXIMUM ( Lat ), MINIMUM ( Lat ), MAXIMUM ( Lng ), MINIMUM ( Lng ) FROM " + fusionTableId[i];
+            var query = new google.visualization.Query(
+              'http://www.google.com/fusiontables/gvizdata?tq=' + 
+              encodeURIComponent(queryLimitsString));   
+            makeQuery(query, i);
+                           
+        }
+
+        function makeQuery(query, queryIndex){
+          query.send(parseMapInfo);
+          function parseMapInfo(response){
+            var mapLimitstable = response.getDataTable();
+            setTable(mapLimitstable);
+          }
+          function setTable(table){
+            mapLimitstable = table;
+            n = mapLimitstable.getValue(0, 0);
+            s = mapLimitstable.getValue(0, 1);
+            e = mapLimitstable.getValue(0, 2);
+            w = mapLimitstable.getValue(0, 3);
+            bounds[queryIndex] = {
+              "n": n,
+              "s": s,
+              "e": e,
+              "w": w
+            }; 
+            addItemToDropdown(queryIndex); 
+          }
+        }
+        function addItemToDropdown(index){
+            var zoomLevel = getBoundsZoomLevel(bounds[index], mapDim);
+            var centerLat = (bounds[index].n + bounds[index].s)/2;
+            var centerLng = (bounds[index].e + bounds[index].w)/2;
             var li = document.createElement("li");
             var link = document.createElement("a");             
-            var text = document.createTextNode(opt);
+            var text = document.createTextNode(opt[index]);
             link.appendChild(text);
-            link.setAttribute('onclick', "refreshInfo('" + fusionTableId + "','" + opt + "')");    
+            link.setAttribute('onclick', "refreshInfo('" + fusionTableId[index] + "'," + centerLat + "," + centerLng + "," + zoomLevel + ",'" + opt[index] + "')");  
             li.appendChild(link);
             list.appendChild(li);
+        }
+
+        function checkIfMapInfoIsReady(){
+          var ready = false;
+          outer_loop:
+          for (var j = 0; j < rows; j++){
+            if (typeof bounds[j] === 'undefined'){
+              alert("undefined " + bounds[j] + j);
+              ready = false;
+              break outer_loop;
+            } else {
+              ready = true;
+            }
           }
-        }    
+          if (ready){
+            alert("SEEEEEEE");
+            addItemsToDropdown();
+          }
+        }
+      }
+
+
+      function getMapDim(){
+        var mapWidth = document.getElementById("map-canvas").offsetWidth;
+        var mapHeight = document.getElementById("map-canvas").offsetHeight  ;
+        var mapDim = {
+          height: mapWidth, 
+          width: mapHeight
+        };
+        return mapDim;
+      }
+
+      function getBoundsZoomLevel(bounds, mapDim) {
+        var WORLD_DIM = { height: 256, width: 256 };
+        var ZOOM_MAX = 21;
+
+        function latRad(lat) {
+          var sin = Math.sin(lat * Math.PI / 180);
+          var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+          return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+        }
+
+        function zoom(mapPx, worldPx, fraction) {
+          return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+        }
+
+        var latFraction = (latRad(bounds.n) - latRad(bounds.s)) / Math.PI;
+
+        var lngDiff = bounds.e - bounds.w;
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        return (Math.min(latZoom, lngZoom, ZOOM_MAX)) - 1;
+      }
+
+
+
             
-      function refreshInfo(fusionTableID, activeProject){
-        loadInfo(fusionTableID);
-        setActiveProject(activeProject, fusionTableID);
+      function refreshInfo(fusionTableID, centerLat, centerLng, zoomLevel, activeProject){
+        loadInfo(fusionTableID, centerLat, centerLng, zoomLevel);
+        setActiveProject(activeProject, fusionTableID, centerLat, centerLng, zoomLevel);
       }
     </script>
 
@@ -65,28 +160,28 @@
     var particles;
     var pointArray=[];
     
-    function loadInfo(fusionTableID){
-          loadMap(fusionTableID);
+    function loadInfo(fusionTableID, centerLat, centerLng, zoomLevel){
+          loadMap(fusionTableID, centerLat, centerLng, zoomLevel);
           drawVisualization(fusionTableID);
     }
     
     function initialize(){
-      loadMap("1r1kPE0irUlLAuMIrpxjwBoJ2UhqryuxOO7V8Ybg8");
-      drawVisualization("1r1kPE0irUlLAuMIrpxjwBoJ2UhqryuxOO7V8Ybg8");
+      loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ", 22.208605, -103.057424, 6);
+      drawVisualization("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
     }
     
-    function setActiveProject(activeProject, fusionTableID){
+    function setActiveProject(activeProject, fusionTableID, centerLat, centerLng, zoomLevel){
         activeProjectLink = document.getElementById("activeProject");    
         var text = document.createTextNode(activeProject);
         activeProjectLink.removeChild( activeProjectLink.firstChild );
         activeProjectLink.appendChild(text);
-        activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableID + "')");
+        activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableId + "','" + centerLat + "','" + centerLng + "','" + zoomLevel + "')");
     }
     
-    function loadMap(fusionTableID) { 
-      var latlng = new google.maps.LatLng(22.208605, -103.057424); 
+    function loadMap(fusionTableID, centerLat, centerLng, zoomLevel) { 
+      var latlng = new google.maps.LatLng(centerLat, centerLng); 
       var myOptions = { 
-        zoom: 5,
+        zoom: zoomLevel, 
         center: latlng, 
         disableDefaultUI: false,
         navigationControl: false,
@@ -438,14 +533,14 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT count(SurveyID), count(SurveyID) FROM " + fusionTableID,
+            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusionTableID,
             "refreshInterval": 5,
-            "chartType": "ColumnChart",
+            "chartType": "BarChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
-              "vAxis": {"title": "Número de encuestas"},
-              "hAxis": {"title": ""},
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"},
               "colors": ["#C2F0C2"], // Pastel green
               }
             });
@@ -454,14 +549,14 @@
           google.visualization.drawChart({
             "containerId": "chart2",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(SurveyID) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(SurveyID) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "BarChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
-              "vAxis": {"title": "Usuarios"},
-              "hAxis": {"title": "Número de encuestas"},
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"},
               "colors": ["#C2F0C2"], // Pastel green
               }
             });
@@ -470,14 +565,14 @@
           google.visualization.drawChart({
             "containerId": "chart3",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "ScatterChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
-              "vAxis": {"title": "Numero de Encuestas"},
-              "hAxis": {"title": "Fecha"},
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"},
               "colors": ["#C2F0C2"], // Pastel green
               }
             });
@@ -486,12 +581,12 @@
           google.visualization.drawChart({
             "containerId": "chart4",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Vivienda, count(SurveyID) FROM " + fusionTableID + " GROUP BY Vivienda ORDER BY count(SurveyID) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "PieChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
+              "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
               "colors": ["#C2F0C2"], // Pastel green
@@ -502,12 +597,12 @@
           google.visualization.drawChart({
             "containerId": "chart5",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Construido, count(SurveyID) FROM " + fusionTableID + " WHERE Construido > '' GROUP BY Construido ORDER BY count(SurveyID) DESC ",
+            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
             "refreshInterval": 5,
-            "chartType": "PieChart",
+            "chartType": "LineChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
+              "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
               "colors": ["#C2F0C2"], // Pastel green
@@ -518,16 +613,15 @@
           google.visualization.drawChart({
             "containerId": "chart6",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Equipamiento, count(SurveyID) FROM " + fusionTableID + " WHERE Equipamiento > ''  GROUP BY Equipamiento ORDER BY count(SurveyID) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "PieChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
+              "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
               "colors": ["#C2F0C2"], // Pastel green
-              "leyendSize": 1,
               }
             });
         }
@@ -556,7 +650,6 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" style="padding-top:8px;" href="http://www.fundacionhogares.org/"><img src="img/FH_Logo 2014.png" style="width:32px;"/></a>
           <a class="navbar-brand" style="padding-top:8px;" href="http://flocktracker.mit.edu"><img src="img/ft_logoxl.png" style="width:32px;"/></a>
           <a class="navbar-brand" href="#">FH Flocktracker Dashboard</a>
         </div>
@@ -585,7 +678,7 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Encuestas Totales</h3>
+              <h3 class="panel-title">Chart One</h3>
             </div>
             <div class="panel-body">
               <div id="chart1"
@@ -600,7 +693,7 @@
           
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Encuestas Totales por Usuario</h3>
+              <h3 class="panel-title">Chart Two</h3>
             </div>
             <div class="panel-body">
               <div id="chart2"
@@ -617,7 +710,7 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Encuestas Totales por Día</h3>
+              <h3 class="panel-title">Chart Three</h3>
             </div>
             <div class="panel-body">
               <div id="chart3"
@@ -632,7 +725,7 @@
           
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Variable Vivienda</h3>
+              <h3 class="panel-title">Chart Four</h3>
             </div>
             <div class="panel-body">
               <div id="chart4"
@@ -649,7 +742,7 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Variable Construido</h3>
+              <h3 class="panel-title">Chart Five</h3>
             </div>
             <div class="panel-body">
               <div id="chart5"
@@ -664,7 +757,7 @@
           
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Variable Equipamiento</h3>
+              <h3 class="panel-title">Chart Six</h3>
             </div>
             <div class="panel-body">
               <div id="chart6"
