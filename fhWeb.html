@@ -533,8 +533,8 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT  count(SurveyID) FROM " + fusionTableID,
-            "chartType": "ImageBarChart",
+            "query":"SELECT  count(Vivienda), count(SurveyID) FROM " + fusionTableID,
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
               "title":"",
