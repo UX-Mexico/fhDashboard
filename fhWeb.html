@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+<<<<<<< HEAD
      <link rel="icon" href="img/FH_Logo 2014.png">
+=======
+    <link rel="icon" href="img/favicon.ico">
+>>>>>>> FETCH_HEAD
 
     <script type="text/javascript">  
       // Getting project list from Fusion Tables   
@@ -166,8 +170,13 @@
     }
     
     function initialize(){
+<<<<<<< HEAD
       loadMap("1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm", 22.208605, -103.057424, 5);
       drawVisualization("1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm");
+=======
+      loadMap("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ", 22.208605, -103.057424, 6);
+      drawVisualization("1qOfdNY9y-Qt7dVDzWNRpW7deT1JuUk8X0ORvlqqZ");
+>>>>>>> FETCH_HEAD
     }
     
     function setActiveProject(activeProject, fusionTableID, centerLat, centerLng, zoomLevel){
@@ -533,6 +542,7 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
+<<<<<<< HEAD
             "query":"SELECT  count(SurveyID) FROM " + fusionTableID,
             "chartType": "ImageBarChart",
             "color": "green", //#99E699,
@@ -547,6 +557,17 @@
               "legend": 'none',
               
              
+=======
+            "query":"SELECT count(q2), count(q3), count(q1) FROM " + fusionTableID,
+            "refreshInterval": 5,
+            "chartType": "BarChart",
+            "color": "green", //#99E699,
+            "options": {
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
+>>>>>>> FETCH_HEAD
               }
             });
         
@@ -554,11 +575,12 @@
           google.visualization.drawChart({
             "containerId": "chart2",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Username, count(SurveyID) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(SurveyID) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "BarChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
+<<<<<<< HEAD
               "title":"",
               "vAxis": {"title": "Usuarios"},
               "hAxis": {"title": "Número de encuestas"},
@@ -566,6 +588,12 @@
               "legend": 'none',
               "width" : 340,
              
+=======
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
+>>>>>>> FETCH_HEAD
               }
             });
         
@@ -573,16 +601,23 @@
           google.visualization.drawChart({
             "containerId": "chart3",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "ScatterChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
+<<<<<<< HEAD
               "title":"",
               "vAxis": {"title": "Numero de Encuestas"},
               "hAxis": {"title": "Fecha"},
               "legend": 'none',
              "width" : 340,
+=======
+              "title":"Example Title Placeholder",
+              "vAxis": {"title": "Example Y-Axis"},
+              "hAxis": {"title": "Example X-Axis"},
+              "colors": ["#C2F0C2"], // Pastel green
+>>>>>>> FETCH_HEAD
               }
             });
         
@@ -590,12 +625,12 @@
           google.visualization.drawChart({
             "containerId": "chart4",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Vivienda, count(SurveyID) FROM " + fusionTableID + " GROUP BY Vivienda ORDER BY count(SurveyID) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "PieChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
+              "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
               "width" : 340,
@@ -609,11 +644,16 @@
           google.visualization.drawChart({
             "containerId": "chart5",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Construido, count(SurveyID) FROM " + fusionTableID + " WHERE Construido > '' GROUP BY Construido ORDER BY count(SurveyID) DESC ",
+            "query":"SELECT Date, count(SurveyID) FROM " + fusionTableID + " GROUP BY Date ORDER BY Date ASC",
             "refreshInterval": 5,
+<<<<<<< HEAD
             "chartType": "PieChart",
+=======
+            "chartType": "LineChart",
+            "color": "green", //#99E699,
+>>>>>>> FETCH_HEAD
             "options": {
-              "title":"",
+              "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
               "width" : 340,
@@ -624,15 +664,19 @@
           google.visualization.drawChart({
             "containerId": "chart6",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT Equipamiento, count(SurveyID) FROM " + fusionTableID + " WHERE Equipamiento > ''  GROUP BY Equipamiento ORDER BY count(SurveyID) DESC",
+            "query":"SELECT Username, count(q1) FROM " + fusionTableID + " GROUP BY Username ORDER BY count(q1) DESC",
             "refreshInterval": 5,
-            "chartType": "PieChart",
+            "chartType": "ColumnChart",
             "color": "green", //#99E699,
             "options": {
-              "title":"",
+              "title":"Example Title Placeholder",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
+<<<<<<< HEAD
               "width" : 340,
+=======
+              "colors": ["#C2F0C2"], // Pastel green
+>>>>>>> FETCH_HEAD
               }
             });
         }
@@ -661,7 +705,6 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" style="padding-top:8px;" href="http://www.fundacionhogares.org/"><img src="img/FH_Logo 2014.png" style="width:32px;"/></a>
           <a class="navbar-brand" style="padding-top:8px;" href="http://flocktracker.mit.edu"><img src="img/ft_logoxl.png" style="width:32px;"/></a>
           <a class="navbar-brand" href="#">FH Flocktracker Dashboard</a>
         </div>
@@ -690,7 +733,7 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Encuestas Totales</h3>
+              <h3 class="panel-title">Chart One</h3>
             </div>
             <div class="panel-body">
               <div id="chart1"
@@ -705,7 +748,7 @@
           
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Encuestas Totales por Usuario</h3>
+              <h3 class="panel-title">Chart Two</h3>
             </div>
             <div class="panel-body">
               <div id="chart2"
@@ -722,7 +765,7 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Encuestas Totales por Día</h3>
+              <h3 class="panel-title">Chart Three</h3>
             </div>
             <div class="panel-body">
               <div id="chart3"
@@ -737,7 +780,7 @@
           
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Variable Vivienda</h3>
+              <h3 class="panel-title">Chart Four</h3>
             </div>
             <div class="panel-body">
               <div id="chart4"
@@ -754,7 +797,7 @@
         <div class="col-sm-4">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Variable Construido</h3>
+              <h3 class="panel-title">Chart Five</h3>
             </div>
             <div class="panel-body">
               <div id="chart5"
@@ -769,7 +812,7 @@
           
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h3 class="panel-title">Variable Equipamiento</h3>
+              <h3 class="panel-title">Chart Six</h3>
             </div>
             <div class="panel-body">
               <div id="chart6"
