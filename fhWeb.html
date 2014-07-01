@@ -6,38 +6,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="img/FH_Logo 2014.png">
+     <link rel="icon" href="img/FH_Logo 2014.png">
 
     <script type="text/javascript">  
-    // Getting project list from Fusion Tables   
-    function queryProjects(){
-      var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
-      var queryString = "SELECT project_name, fusion_table FROM " + fusiontable_project_names;                 
-      var query = new google.visualization.Query(
-            'http://www.google.com/fusiontables/gvizdata?tq=' + 
-            encodeURIComponent(queryString));   
-            query.send(queryProjects2);
+      // Getting project list from Fusion Tables   
+      function queryProjects(){
+        var fusiontable_project_names = "1lBd3QeR4-qv7FvYf3JMzyHJEgm0kAgMeEETtGINg"; // Table with project names and fusion tables ids
+        var queryString = "SELECT project_name, fusion_table FROM " + fusiontable_project_names;                 
+        var query = new google.visualization.Query(
+              'http://www.google.com/fusiontables/gvizdata?tq=' + 
+              encodeURIComponent(queryString));   
+              query.send(queryProjects2);
       }
-      function queryProjects2(response){
-        var table = response.getDataTable();
+      function queryProjects2(projectResponse){
+        var table = projectResponse.getDataTable();
         var rows = table.getNumberOfRows();
-        var list = document.getElementById("projectSelectorDropdown"); 
-        for (var i = 0; i < rows; i++){ 
-            var fusionTableId = table.getValue(i, 1);           
-            var opt = table.getValue(i, 0);     
+        var list = document.getElementById("projectSelectorDropdown");
+        var fusionTableId = new Array(rows); 
+        var opt = new Array(rows); 
+        var bounds = new Array(rows); 
+        var mapDim = getMapDim();
+        var zoomLevel = new Array(rows);
+        for (var i = 0; i < rows; i++){  
+            fusionTableId[i] = table.getValue(i, 1);        
+            opt[i] = table.getValue(i, 0);
+            var queryLimitsString = "SELECT MAXIMUM ( Lat ), MINIMUM ( Lat ), MAXIMUM ( Lng ), MINIMUM ( Lng ) FROM " + fusionTableId[i];
+            var query = new google.visualization.Query(
+              'http://www.google.com/fusiontables/gvizdata?tq=' + 
+              encodeURIComponent(queryLimitsString));   
+            makeQuery(query, i);
+                           
+        }
+
+        function makeQuery(query, queryIndex){
+          query.send(parseMapInfo);
+          function parseMapInfo(response){
+            var mapLimitstable = response.getDataTable();
+            setTable(mapLimitstable);
+          }
+          function setTable(table){
+            mapLimitstable = table;
+            n = mapLimitstable.getValue(0, 0);
+            s = mapLimitstable.getValue(0, 1);
+            e = mapLimitstable.getValue(0, 2);
+            w = mapLimitstable.getValue(0, 3);
+            bounds[queryIndex] = {
+              "n": n,
+              "s": s,
+              "e": e,
+              "w": w
+            }; 
+            addItemToDropdown(queryIndex); 
+          }
+        }
+        function addItemToDropdown(index){
+            var zoomLevel = getBoundsZoomLevel(bounds[index], mapDim);
+            var centerLat = (bounds[index].n + bounds[index].s)/2;
+            var centerLng = (bounds[index].e + bounds[index].w)/2;
             var li = document.createElement("li");
             var link = document.createElement("a");             
-            var text = document.createTextNode(opt);
+            var text = document.createTextNode(opt[index]);
             link.appendChild(text);
-            link.setAttribute('onclick', "refreshInfo('" + fusionTableId + "','" + opt + "')");    
+            link.setAttribute('onclick', "refreshInfo('" + fusionTableId[index] + "'," + centerLat + "," + centerLng + "," + zoomLevel + ",'" + opt[index] + "')");  
             li.appendChild(link);
             list.appendChild(li);
+        }
+
+        function checkIfMapInfoIsReady(){
+          var ready = false;
+          outer_loop:
+          for (var j = 0; j < rows; j++){
+            if (typeof bounds[j] === 'undefined'){
+              alert("undefined " + bounds[j] + j);
+              ready = false;
+              break outer_loop;
+            } else {
+              ready = true;
+            }
           }
-        }    
+          if (ready){
+            alert("SEEEEEEE");
+            addItemsToDropdown();
+          }
+        }
+      }
+
+
+      function getMapDim(){
+        var mapWidth = document.getElementById("map-canvas").offsetWidth;
+        var mapHeight = document.getElementById("map-canvas").offsetHeight  ;
+        var mapDim = {
+          height: mapWidth, 
+          width: mapHeight
+        };
+        return mapDim;
+      }
+
+      function getBoundsZoomLevel(bounds, mapDim) {
+        var WORLD_DIM = { height: 256, width: 256 };
+        var ZOOM_MAX = 21;
+
+        function latRad(lat) {
+          var sin = Math.sin(lat * Math.PI / 180);
+          var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+          return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+        }
+
+        function zoom(mapPx, worldPx, fraction) {
+          return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+        }
+
+        var latFraction = (latRad(bounds.n) - latRad(bounds.s)) / Math.PI;
+
+        var lngDiff = bounds.e - bounds.w;
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        return (Math.min(latZoom, lngZoom, ZOOM_MAX)) - 1;
+      }
+
+
+
             
-      function refreshInfo(fusionTableID, activeProject){
-        loadInfo(fusionTableID);
-        setActiveProject(activeProject, fusionTableID);
+      function refreshInfo(fusionTableID, centerLat, centerLng, zoomLevel, activeProject){
+        loadInfo(fusionTableID, centerLat, centerLng, zoomLevel);
+        setActiveProject(activeProject, fusionTableID, centerLat, centerLng, zoomLevel);
       }
     </script>
 
@@ -65,28 +160,28 @@
     var particles;
     var pointArray=[];
     
-    function loadInfo(fusionTableID){
-          loadMap(fusionTableID);
+    function loadInfo(fusionTableID, centerLat, centerLng, zoomLevel){
+          loadMap(fusionTableID, centerLat, centerLng, zoomLevel);
           drawVisualization(fusionTableID);
     }
     
     function initialize(){
-      loadMap("1r1kPE0irUlLAuMIrpxjwBoJ2UhqryuxOO7V8Ybg8");
-      drawVisualization("1r1kPE0irUlLAuMIrpxjwBoJ2UhqryuxOO7V8Ybg8");
+      loadMap("1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm", 22.208605, -103.057424, 5);
+      drawVisualization("1KGt7nGOtN9QOchPFfjF_tN4emt4Yc-SEOsMqDEvm");
     }
     
-    function setActiveProject(activeProject, fusionTableID){
+    function setActiveProject(activeProject, fusionTableID, centerLat, centerLng, zoomLevel){
         activeProjectLink = document.getElementById("activeProject");    
         var text = document.createTextNode(activeProject);
         activeProjectLink.removeChild( activeProjectLink.firstChild );
         activeProjectLink.appendChild(text);
-        activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableID + "')");
+        activeProjectLink.setAttribute('onclick', "loadInfo('" + fusionTableId + "','" + centerLat + "','" + centerLng + "','" + zoomLevel + "')");
     }
     
-    function loadMap(fusionTableID) { 
-      var latlng = new google.maps.LatLng(22.208605, -103.057424); 
+    function loadMap(fusionTableID, centerLat, centerLng, zoomLevel) { 
+      var latlng = new google.maps.LatLng(centerLat, centerLng); 
       var myOptions = { 
-        zoom: 5,
+        zoom: zoomLevel, 
         center: latlng, 
         disableDefaultUI: false,
         navigationControl: false,
@@ -418,9 +513,9 @@
         styleId: 2,
         templateId: 2
       });
+    
+      }
       
-                
-    }
     google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 
@@ -438,15 +533,20 @@
           google.visualization.drawChart({
             "containerId": "chart1",
             "dataSourceUrl": 'https://www.google.com/fusiontables/gvizdata?tq=',
-            "query":"SELECT count(SurveyID), count(SurveyID) FROM " + fusionTableID,
-            "refreshInterval": 5,
-            "chartType": "ColumnChart",
+            "query":"SELECT  count(SurveyID) FROM " + fusionTableID,
+            "chartType": "ImageBarChart",
             "color": "green", //#99E699,
             "options": {
               "title":"",
-              "vAxis": {"title": "Número de encuestas"},
-              "hAxis": {"title": ""},
-              "colors": ["#C2F0C2"], // Pastel green
+              "height" : 240,
+              "width" : 300,
+              "vAxis": {"title": ""},
+              "hAxis": {"title": "Número de encuestas"},
+              "isVertical": 'true',
+              "showAxisLines": 'false',
+              "legend": 'none',
+              
+             
               }
             });
         
@@ -462,7 +562,10 @@
               "title":"",
               "vAxis": {"title": "Usuarios"},
               "hAxis": {"title": "Número de encuestas"},
-              "colors": ["#C2F0C2"], // Pastel green
+              "showAxisLines": 'false',
+              "legend": 'none',
+              "width" : 340,
+             
               }
             });
         
@@ -478,7 +581,8 @@
               "title":"",
               "vAxis": {"title": "Numero de Encuestas"},
               "hAxis": {"title": "Fecha"},
-              "colors": ["#C2F0C2"], // Pastel green
+              "legend": 'none',
+             "width" : 340,
               }
             });
         
@@ -494,7 +598,10 @@
               "title":"",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
-              "colors": ["#C2F0C2"], // Pastel green
+              "width" : 340,
+              "legend": {"height": 600},
+              
+             
               }
             });
         
@@ -505,12 +612,11 @@
             "query":"SELECT Construido, count(SurveyID) FROM " + fusionTableID + " WHERE Construido > '' GROUP BY Construido ORDER BY count(SurveyID) DESC ",
             "refreshInterval": 5,
             "chartType": "PieChart",
-            "color": "green", //#99E699,
             "options": {
               "title":"",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
-              "colors": ["#C2F0C2"], // Pastel green
+              "width" : 340,
               }
             });
         
@@ -526,8 +632,7 @@
               "title":"",
               "vAxis": {"title": "Example Y-Axis"},
               "hAxis": {"title": "Example X-Axis"},
-              "colors": ["#C2F0C2"], // Pastel green
-              "leyendSize": 1,
+              "width" : 340,
               }
             });
         }
@@ -562,9 +667,9 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#" id="activeProject">ActiveProject</a></li>
+            <li class="active"><a href="#" id="activeProject">Proyecto Activo</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site Select<span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Selección del sitio<span class="caret"></span></a>
               <ul class="dropdown-menu" id="projectSelectorDropdown">
               </ul>
             </li>         
@@ -578,7 +683,7 @@
     <div class="container theme-showcase" role="main">
 
       <div class="page-header">
-        <h1>Visual Statistics</h1>
+        <h1>Estadísticas</h1>
       </div>
       <div class="row">
 
@@ -589,7 +694,7 @@
             </div>
             <div class="panel-body">
               <div id="chart1"
-                style=  "width: 325px; 
+                style=  "width: 250px; 
                         height: 250px;
                         float: left;
                         z-index: 2;
@@ -604,7 +709,7 @@
             </div>
             <div class="panel-body">
               <div id="chart2"
-                style=  "width: 325px; 
+                style=  "width: 250px;
                         height: 250px;
                         float: left;
                         z-index: 2;
@@ -621,7 +726,7 @@
             </div>
             <div class="panel-body">
               <div id="chart3"
-                style=  "width: 325px; 
+                style=  "width: 250px;
                         height: 250px;
                         float: left;
                         z-index: 2;
@@ -636,7 +741,7 @@
             </div>
             <div class="panel-body">
               <div id="chart4"
-                style=  "width: 325px; 
+                style=  "width: 250px;
                         height: 250px;
                         float: left;
                         z-index: 2;
@@ -653,7 +758,7 @@
             </div>
             <div class="panel-body">
               <div id="chart5"
-                style=  "width: 325px; 
+                style=  "width: 250px; 
                         height: 250px;
                         float: left;
                         z-index: 2;
@@ -668,7 +773,7 @@
             </div>
             <div class="panel-body">
               <div id="chart6"
-                style=  "width: 325px; 
+                style=  "width: 250px;
                         height: 250px;
                         float: left;
                         z-index: 2;
@@ -696,7 +801,7 @@
   <center>Powered by Flocktracker.</center><br>
 
   <div><table align="center"><tr><td><a href="http://www.dusp.mit.edu"><img src="./img/partner_logos-01.png" style="opacity:0.4"/></a></td><td><a href="http://www.urbanlaunchpad.org/"><img src="./img/partner_logos-02.png" style="opacity:0.4"/></a></td><td><a href="http://smart.mit.edu/"><img src="./img/partner_logos-03.png" style="opacity:0.4"/></a></td><td><a href="http://smart.mit.edu/research/future-urban-mobility/future-urban-mobility.html"><img src="./img/partner_logos-04.png" style="opacity:0.4"/></a></td><td><a href="http://misti.mit.edu/mit-mexico"><img src="./img/partner_logos-05.png" style="opacity:0.4"/></a></td><td><a href="http://www.grupoprodi.com/"><img src="./img/partner_logos-06.png" style="opacity:0.4"/></a></td></tr></table></div>
-  <center>Some of our past and current partners.</center><br>
+  <center>Alianzas actuales</center><br>
 
   <br>
   <br>
